@@ -1,0 +1,109 @@
+﻿@{
+    var passedTitle = Context.Request.Query["title"].ToString();
+    var passedDesc = Context.Request.Query["desc"].ToString();
+    ViewData["Title"] = string.IsNullOrEmpty(passedTitle) ? "CTR Reports Related to Accounts" : passedTitle;
+    ViewData["Description"] = passedDesc;
+    Layout = "_Layout";
+}
+
+<script type="text/javascript">
+    var g_engId = 0;
+    var g_rptID = 0;
+    $(document).ready(function() {
+        var url_string = window.location;
+        var url = new URL(url_string);
+        g_engId = url.searchParams.get("engId");
+        g_rptID  = url.searchParams.get("report_id");
+        loadexceptionReport();
+    });
+
+    function loadexceptionReport(){
+        $("#wait").show();
+        destroyDatatable('biomet_sample_list');
+        $.ajax({
+            url: g_asiBaseURL + "/ApiCalls/get_exception_account_report",
+            cache: false,
+            type: "POST",
+            data:{ENG_ID:g_engId, RPT_ID:g_rptID },
+            success: function (data) {
+                if(data.length > 0) {
+                    populateTable(data);
+                }
+            },
+            dataType: "json",
+            complete: function(){
+                $("#wait").hide();
+            },
+        });
+    }
+    function populateTable(data) {
+        $('#wait').show();
+        var tableBody = $("#biomet_sample_list tbody");
+        tableBody.empty();
+
+        $.each(data, function(index, item){
+            var row = `<tr>
+        <td>${index + 1}</td> 
+        <td>${item.accounT_NO}</td>
+        <td>${item.accounT_TITLE}</td>
+        <td>${item.customeR_NAME}</td>
+        <td>${item.masteR_CODE}</td>
+        <td>${item.tR_DESCRIPTION}</td>
+        <td>${item.tR_DATE}</td>
+        <td>${formatDate(item.tR_AUTHDATE)}</td>
+        <td>${item.dR_AMOUNT}</td>
+        <td>${item.cR_AMOUNT}</td>
+         <td>
+            <a href="./account_document?engId=${g_engId}&acNo=${item.accounT_NO}" class="btn btn-primary btn-sm">Documents</a>
+        </td>
+        <td>
+            <a href="./account_transaction?engId=${g_engId}&acNo=${item.accounT_NO}" class="btn btn-success btn-sm">Transactions</a>
+        </td>
+    </tr>`;
+            tableBody.append(row);
+          });
+        initializeDataTable('biomet_sample_list');
+        $('#wait').hide();
+    }
+     function formatDate(dateString) {
+        if (!dateString || dateString.trim() === "") return "";
+        let date = new Date(dateString);
+        return date.toLocaleDateString();
+    }    
+
+</script>
+<link rel="stylesheet" href="~/css/sampling.css" />
+<div class="container-fluid mt-4">
+    <div class="card card-sample shadow-sm">
+        <div class="card-header">
+            <h4 class="mb-0">@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            @if(!string.IsNullOrWhiteSpace(ViewData["Description"] as string))
+            {
+                <p class="font-weight-bold text-danger">@ViewData["Description"]</p>
+            }
+            <div class="table-responsive">
+                <table id="biomet_sample_list" class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sr No</th>
+                            <th>Account No</th>
+                            <th>Account Title</th>
+                            <th>Customer Name</th>
+                            <th>master code</th>
+                            <th>Details</th>
+                            <th>transaction Date</th>
+                            <th>Authorization Date</th>
+                            <th>DR Amount</th>
+                            <th>CR Amount</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

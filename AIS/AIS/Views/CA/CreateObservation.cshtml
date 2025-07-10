@@ -1,0 +1,37 @@
+@model AIS.Models.CAObservation
+@{
+    ViewData["Title"] = "Add New Audit Observation";
+    Layout = "_Layout";
+}
+
+<h2>Add New Audit Observation</h2>
+<form asp-action="CreateObservation" enctype="multipart/form-data" method="post">
+    <div>
+        <label>Observation ID (Stage 1):</label>
+        <input asp-for="ObservationID" class="form-control" required />
+    </div>
+    <div>
+        <label>Observation Text:</label>
+        <textarea asp-for="ObservationText" class="form-control" required></textarea>
+    </div>
+    <div>
+        <label>Supporting Documents:</label>
+        <input asp-for="SupportingDocuments" type="file" class="form-control" />
+    </div>
+    <div>
+        <label>Assign to Division:</label>
+        <select name="AssignedDivisionID" id="AssignedDivisionID" class="form-control">
+            <option value="">-- Select Division --</option>
+            @{
+                if (ViewData["DivisionList"] != null)
+                {
+                    foreach (var item in (dynamic)ViewData["DivisionList"])
+                    {
+                        <option value="@item.DIVISIONID">@item.NAME</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>

@@ -1,0 +1,24 @@
+@model IEnumerable<AIS.Models.CAObservationAuditTrail>
+@{
+    ViewData["Title"] = "Observation Audit Trail";
+    Layout = "_Layout";
+}
+
+<h2>Audit Trail</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Date/Time</th>
+        <th>Action</th>
+        <th>By</th>
+        <th>Remarks</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ActionDate.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>@item.Action</td>
+            <td>@item.ActionBy</td>
+            <td>@item.Remarks</td>
+        </tr>
+    }
+</table>
