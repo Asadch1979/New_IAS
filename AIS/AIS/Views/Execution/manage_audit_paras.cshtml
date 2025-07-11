@@ -230,37 +230,44 @@
         $('#paraTextViewer').val(v.parA_TEXT).trigger('change');
         $('#auditPara_AmountInv').val(v.amounT_INV);
         $('#auditPara_InstNO').val(v.nO_INSTANCES);
-        $('#referenceTypeSelect').val(v.referencE_TYPE || v.REFERENCE_TYPE);
-        $('#divisionSelect').val(v.division);
-        $('#instructionsTitle').val(v.instructionS_TITLE);
-        $('#instructionsDetails').val(v.instructionsDetails);
-        $('#instructionsDate').val(v.instructionS_DATE);
 
-        var hasInst = v.instructionS_TITLE;
-        if (hasInst) {
-            $('#instructionFields').show();
-            $('#divisionSelect').show();
-            $('#referenceTypeSelect').prop('disabled', true);
-            $('#divisionSelect').prop('readonly', true);
-            $('#instructionsTitle').prop('readonly', true);
-            $('#instructionsDate').prop('readonly', true);
-            $('#instructionsDetails').prop('readonly', true);
-            $('#updateReferenceSection').show();
-        } else {
-            $('#referenceTypeSelect').prop('disabled', false);
-            $('#divisionSelect').prop('readonly', false);
-            $('#instructionsTitle').prop('readonly', false).prop('disabled', false);
-            $('#instructionsDate').prop('readonly', false);
-            $('#instructionsDetails').prop('readonly', false);
-            $('#updateReferenceSection').hide();
-            if ($('#referenceTypeSelect').val() !== '0') {
+        // ensure reference types and divisions are loaded before setting values
+        loadReferenceTypes(function () {
+            $('#referenceTypeSelect').val(v.referencE_TYPE || v.REFERENCE_TYPE);
+            loadDivisions(function () {
+                $('#divisionSelect').val(v.division);
+            });
+
+            $('#instructionsTitle').val(v.instructionS_TITLE);
+            $('#instructionsDetails').val(v.instructionsDetails);
+            $('#instructionsDate').val(v.instructionS_DATE);
+
+            var hasInst = v.instructionS_TITLE;
+            if (hasInst) {
                 $('#instructionFields').show();
                 $('#divisionSelect').show();
+                $('#referenceTypeSelect').prop('disabled', true);
+                $('#divisionSelect').prop('readonly', true);
+                $('#instructionsTitle').prop('readonly', true);
+                $('#instructionsDate').prop('readonly', true);
+                $('#instructionsDetails').prop('readonly', true);
+                $('#updateReferenceSection').show();
             } else {
-                $('#instructionFields').hide();
-                $('#divisionSelect').hide();
+                $('#referenceTypeSelect').prop('disabled', false);
+                $('#divisionSelect').prop('readonly', false);
+                $('#instructionsTitle').prop('readonly', false).prop('disabled', false);
+                $('#instructionsDate').prop('readonly', false);
+                $('#instructionsDetails').prop('readonly', false);
+                $('#updateReferenceSection').hide();
+                if ($('#referenceTypeSelect').val() !== '0') {
+                    $('#instructionFields').show();
+                    $('#divisionSelect').show();
+                } else {
+                    $('#instructionFields').hide();
+                    $('#divisionSelect').hide();
+                }
             }
-        }
+        });
 
         ObservationResponsibles(index);
     }
