@@ -219,6 +219,13 @@
         g_ind = v.indicator;
         g_annexureRefId = parseInt(v.annexurE_REF_ID || v.ANNEXURE_REF_ID || 0);
 
+        loadReferenceTypes(function () {
+            $('#auditPara_reference').val(v.referencE_TYPE || v.REFERENCE_TYPE);
+        });
+        loadDivisions(function () {
+            $('#auditPara_division').val(v.division);
+        });
+
         $('#auditPara_Period').val(v.audiT_PERIOD);
         $('#auditPara_ParaNO').val(v.parA_NO);
         $('#auditPara_Annex').val(v.anneX_ID);
@@ -227,12 +234,9 @@
         $('#paraTextViewer').val(v.parA_TEXT).trigger('change');
         $('#auditPara_AmountInv').val(v.amounT_INV);
         $('#auditPara_InstNO').val(v.nO_INSTANCES);
-        $('#auditPara_reference').val(v.referencE_TYPE || v.REFERENCE_TYPE);
-        $('#auditPara_division').val(v.division);
         $('#auditPara_instructionsTitle').val(v.instructionS_TITLE);
         $('#auditPara_instructionsDetails').val(v.instructionsDetails);
-        $('#auditPara_instructionsDate').val(v.instructionS_DATE);  
-        });
+        $('#auditPara_instructionsDate').val(v.instructionS_DATE);
 
         ObservationResponsibles(index);
     }
