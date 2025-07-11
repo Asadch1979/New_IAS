@@ -80,34 +80,31 @@
             // removed call to tryLoadInstructions
         });
 
-       
-       
-        function loadDivisions(callback) {
-            $('#divisionSelect').empty();
-            $.ajax({
-                url: g_asiBaseURL + "/ApiCalls/getparentrel",
-                type: "POST",
-                data: {
-                    'ENTITY_REALTION_ID': 3
-                },
-                cache: false,
-                success: function (data) {
-                    $('#divisionSelect').append('<option value="0">--Select Division--</option>');
-                    $.each(data, function (i, v) {
-                        $('#divisionSelect').append('<option value="' + v.entitY_ID + '\">' + v.description + '</option>');
-                    });
-                    if (g_selectedCircular) {
-                        $('#divisionSelect').val(g_selectedCircular.entId);
-                    }
-                    // no instruction loading on division change
-                    if (callback) callback();
-                },
-                dataType: "json",
-            });
-        }
-
-
     });
+
+    function loadDivisions(callback) {
+        $('#divisionSelect').empty();
+        $.ajax({
+            url: g_asiBaseURL + "/ApiCalls/getparentrel",
+            type: "POST",
+            data: {
+                'ENTITY_REALTION_ID': 3
+            },
+            cache: false,
+            success: function (data) {
+                $('#divisionSelect').append('<option value="0">--Select Division--</option>');
+                $.each(data, function (i, v) {
+                    $('#divisionSelect').append('<option value="' + v.entitY_ID + '\">' + v.description + '</option>');
+                });
+                if (g_selectedCircular) {
+                    $('#divisionSelect').val(g_selectedCircular.entId);
+                }
+                // no instruction loading on division change
+                if (callback) callback();
+            },
+            dataType: "json",
+        });
+    }
     function getrelation(parentEntityId = 0, userEntityId = 0) {
             alert("getrelation called");
 
@@ -190,7 +187,7 @@
                     g_allObs = data;
                     $.each(data, function (i, v) {
                         if($('#userGroupField').val()==1)
-                        $('#manageObsPanel tbody').append('<tr index="'+i+'"><td class="text-center">' + (i + 1) + '</td><td class="text-center">' + v.audiT_PERIOD + '</td><td>' + v.parA_NO + '</td><td>' + v.annex + '</td><td>' + v.obS_RISK + '</td><td>' + v.obS_GIST + '</td><td>' + v.updateD_BY + '</td><td>' + v.updateD_ON + '</td><td class="text-center"><a onclick="event.preventDefault();ObservationViewerPanel(\'' + i + '\')" href="#" class="text-hover">Update Para Details</a></td><td class="text-center"><a onclick="event.preventDefault();DeleteDuplicatePara(\'' + v.neW_PARA_ID + '\',\'' + v.olD_PARA_ID + '\', \'' + v.p_TYPE_IND + '\')" href="#" class="text-hover">Delete Duplicate Para</a></td><td><input type="checkbox" class="selectedParasToShift"</td></tr>');
+                        $('#manageObsPanel tbody').append('<tr index="'+i+'"><td class="text-center">' + (i + 1) + '</td><td class="text-center">' + v.audiT_PERIOD + '</td><td>' + v.parA_NO + '</td><td>' + v.annex + '</td><td>' + v.obS_RISK + '</td><td>' + v.obS_GIST + '</td><td>' + v.updateD_BY + '</td><td>' + v.updateD_ON + '</td><td class="text-center"><a onclick="event.preventDefault();ObservationViewerPanel(\'' + i + '\')" href="#" class="text-hover">Update Para Details</a></td><td class="text-center"><a onclick="event.preventDefault();DeleteDuplicatePara(\'' + v.neW_PARA_ID + '\',\'' + v.olD_PARA_ID + '\', \'' + v.p_TYPE_IND + '\')" href="#" class="text-hover">Delete Duplicate Para</a></td><td><input type="checkbox" class="selectedParasToShift" /></td></tr>');
                         else
                         $('#manageObsPanel tbody').append('<tr><td class="text-center">' + (i + 1) + '</td><td class="text-center">' + v.audiT_PERIOD + '</td><td>' + v.parA_NO + '</td><td>' + v.annex + '</td><td>' + v.obS_RISK + '</td><td>' + v.obS_GIST + '</td><td>' + v.updateD_BY + '</td><td>' + v.updateD_ON + '</td><td class="text-center"><a onclick="event.preventDefault();ObservationViewerPanel(\'' + i + '\')" href="#" class="text-hover">Update Para Details</a></td><td class="text-center"><a onclick="event.preventDefault();DeleteDuplicatePara(\'' + v.neW_PARA_ID + '\',\'' + v.olD_PARA_ID + '\', \'' + v.p_TYPE_IND + '\')" href="#" class="text-hover">Delete Duplicate Para</a></td></tr>');
                     });
