@@ -106,7 +106,7 @@
         });
     }
     function getrelation(parentEntityId = 0, userEntityId = 0) {
-            alert("getrelation called");
+          //  alert("getrelation called");
 
         $('#controlingsearch').empty();
         $('#childposting').empty();
@@ -227,43 +227,11 @@
         $('#paraTextViewer').val(v.parA_TEXT).trigger('change');
         $('#auditPara_AmountInv').val(v.amounT_INV);
         $('#auditPara_InstNO').val(v.nO_INSTANCES);
-
-        // ensure reference types and divisions are loaded before setting values
-        loadReferenceTypes(function () {
-            $('#referenceTypeSelect').val(v.referencE_TYPE || v.REFERENCE_TYPE);
-            loadDivisions(function () {
-                $('#divisionSelect').val(v.division);
-            });
-
-            $('#instructionsTitle').val(v.instructionS_TITLE);
-            $('#instructionsDetails').val(v.instructionsDetails);
-            $('#instructionsDate').val(v.instructionS_DATE);
-
-            var hasInst = v.instructionS_TITLE;
-            if (hasInst) {
-                $('#instructionFields').show();
-                $('#divisionSelect').show();
-                $('#referenceTypeSelect').prop('disabled', true);
-                $('#divisionSelect').prop('readonly', true);
-                $('#instructionsTitle').prop('readonly', true);
-                $('#instructionsDate').prop('readonly', true);
-                $('#instructionsDetails').prop('readonly', true);
-                $('#updateReferenceSection').show();
-            } else {
-                $('#referenceTypeSelect').prop('disabled', false);
-                $('#divisionSelect').prop('readonly', false);
-                $('#instructionsTitle').prop('readonly', false).prop('disabled', false);
-                $('#instructionsDate').prop('readonly', false);
-                $('#instructionsDetails').prop('readonly', false);
-                $('#updateReferenceSection').hide();
-                if ($('#referenceTypeSelect').val() !== '0') {
-                    $('#instructionFields').show();
-                    $('#divisionSelect').show();
-                } else {
-                    $('#instructionFields').hide();
-                    $('#divisionSelect').hide();
-                }
-            }
+        $('#auditPara_reference').val(v.referencE_TYPE || v.REFERENCE_TYPE);
+        $('#auditPara_division').val(v.division);
+        $('#auditPara_instructionsTitle').val(v.instructionS_TITLE);
+        $('#auditPara_instructionsDetails').val(v.instructionsDetails);
+        $('#auditPara_instructionsDate').val(v.instructionS_DATE);  
         });
 
         ObservationResponsibles(index);
@@ -290,14 +258,14 @@
         $('#circularModal').modal('hide');
         $('#referenceTypeSelect').val('3').prop('disabled', true);
         $('#divisionSelect').val(g_selectedCircular.entId).prop('readonly', true);
-        if ($('#instructionsTitle').is('select')) {
+            if ($('#auditPara_instructionsTitle').is('select')) {
             var ref = g_selectedCircular.referenceNo;
-            if ($('#instructionsTitle option[value="' + ref + '"]').length === 0) {
-                $('#instructionsTitle').append($('<option>', { value: ref, text: ref }));
+                if ($('#auditPara_instructionsTitle option[value="' + ref + '"]').length === 0) {
+                    $('#auditPara_instructionsTitle').append($('<option>', { value: ref, text: ref }));
             }
-            $('#instructionsTitle').val(ref).prop('disabled', true);
+                $('#auditPara_instructionsTitle').val(ref).prop('disabled', true);
         } else {
-            $('#instructionsTitle').val(g_selectedCircular.referenceNo).prop('readonly', true);
+                $('#auditPara_instructionsTitle').val(g_selectedCircular.referenceNo).prop('readonly', true);
         }
         $('#instructionsDate').val(g_selectedCircular.issueDate ? g_selectedCircular.issueDate.split('T')[0] : '').prop('readonly', true);
         $('#instructionFields').show();
@@ -731,12 +699,12 @@ function updateObservationStatus() {
                         <label>Reference Type</label>
                         <div class="row">
                             <div class="col-md-6">
-                                <select id="referenceTypeSelect" class="form-select form-control">
+                                <select id="auditPara_reference" class="form-select form-control">
                                     <option value="0">--Select Reference Type--</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <select id="divisionSelect" class="form-select form-control" style="display:none;" disabled>
+                                <select id="auditPara_division" class="form-select form-control" style="display:none;" disabled>
                                     <option value="0">--Select Division--</option>
                                 </select>
                             </div>
@@ -745,20 +713,19 @@ function updateObservationStatus() {
                     <div id="instructionFields" class="form-group mt-3" style="display:none;">
                         <div class="row">
                             <div class="col-md-4 mt-2">
-                                <label for="instructionsTitle">Title/Chapter</label>
-                                <select id="instructionsTitle" class="form-control" disabled>
+                                <label for="auditPara_instructionsTitle">Title/Chapter</label>
+                                <select id="auditPara_instructionsTitle" class="form-control" disabled>
                                     <option value="">--Select or Add Title/Chapter--</option>
                                 </select>
-                                <input type="text" id="newInstructionsTitle" class="form-control mt-2" placeholder="Enter new title" style="display:none;" />
-                                <div id="instructionCount" class="text-info mt-1"></div>
+                                                               
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label>Instructions Date</label>
-                                <input id="instructionsDate" type="date" class="form-control" readonly />
+                                <input id="auditPara_instructionsDate" type="date" class="form-control" readonly />
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label>Instructions Details</label>
-                                <textarea id="instructionsDetails" class="form-control"></textarea>
+                                <textarea id="auditPara_instructionsDetails" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
