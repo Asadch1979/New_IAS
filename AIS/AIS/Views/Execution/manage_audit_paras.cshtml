@@ -231,27 +231,46 @@
         $('#auditPara_AmountInv').val(v.amounT_INV);
         $('#auditPara_InstNO').val(v.nO_INSTANCES);
         $('#referenceTypeSelect').val(v.referencE_TYPE || v.REFERENCE_TYPE);
+        $('#referenceTypeDisplay').val(v.referencE_TYPE || v.REFERENCE_TYPE);
         $('#divisionSelect').val(v.division);
+        $('#divisionDisplay').val(v.division || v.DIVISION);
         $('#instructionsTitle').val(v.instructionS_TITLE);
+        $('#instructionsTitleDisplay').val(v.instructionS_TITLE);
         $('#instructionsDetails').val(v.instructionsDetails);
+        $('#instructionsDetailsDisplay').val(v.instructionsDetails);
         $('#instructionsDate').val(v.instructionS_DATE);
+        $('#instructionsDateDisplay').val(v.instructionS_DATE);
 
         var hasInst = v.instructionS_TITLE;
         if (hasInst) {
             $('#instructionFields').show();
-            $('#divisionSelect').show();
+            $('#referenceTypeSelect').hide();
+            $('#referenceTypeDisplay').show();
+            $('#divisionSelect').hide();
+            $('#divisionDisplay').show();
+            $('#instructionsTitle').hide();
+            $('#instructionsTitleDisplay').show();
+            $('#instructionsDate').hide();
+            $('#instructionsDateDisplay').show();
+            $('#instructionsDetails').hide();
+            $('#instructionsDetailsDisplay').show();
+            $('#updateReferenceSection').show();
             $('#referenceTypeSelect').prop('disabled', true);
             $('#divisionSelect').prop('readonly', true);
             $('#instructionsTitle').prop('readonly', true);
             $('#instructionsDate').prop('readonly', true);
             $('#instructionsDetails').prop('readonly', true);
-            $('#updateReferenceSection').show();
         } else {
-            $('#referenceTypeSelect').prop('disabled', false);
-            $('#divisionSelect').prop('readonly', false);
-            $('#instructionsTitle').prop('readonly', false).prop('disabled', false);
-            $('#instructionsDate').prop('readonly', false);
-            $('#instructionsDetails').prop('readonly', false);
+            $('#referenceTypeSelect').show().prop('disabled', false);
+            $('#referenceTypeDisplay').hide();
+            $('#divisionSelect').show().prop('readonly', false);
+            $('#divisionDisplay').hide();
+            $('#instructionsTitle').show().prop('readonly', false).prop('disabled', false);
+            $('#instructionsTitleDisplay').hide();
+            $('#instructionsDate').show().prop('readonly', false);
+            $('#instructionsDateDisplay').hide();
+            $('#instructionsDetails').show().prop('readonly', false);
+            $('#instructionsDetailsDisplay').hide();
             $('#updateReferenceSection').hide();
             if ($('#referenceTypeSelect').val() !== '0') {
                 $('#instructionFields').show();
@@ -284,18 +303,25 @@
         }
         g_selectedCircular = selected;
         $('#circularModal').modal('hide');
-        $('#referenceTypeSelect').val('3').prop('disabled', true);
-        $('#divisionSelect').val(g_selectedCircular.entId).prop('readonly', true);
+        $('#referenceTypeDisplay').hide();
+        $('#referenceTypeSelect').show().val('3').prop('disabled', true);
+        $('#divisionDisplay').hide();
+        $('#divisionSelect').show().val(g_selectedCircular.entId).prop('readonly', true);
         if ($('#instructionsTitle').is('select')) {
             var ref = g_selectedCircular.referenceNo;
             if ($('#instructionsTitle option[value="' + ref + '"]').length === 0) {
                 $('#instructionsTitle').append($('<option>', { value: ref, text: ref }));
             }
-            $('#instructionsTitle').val(ref).prop('disabled', true);
+            $('#instructionsTitle').val(ref).prop('disabled', true).show();
+            $('#instructionsTitleDisplay').hide();
         } else {
-            $('#instructionsTitle').val(g_selectedCircular.referenceNo).prop('readonly', true);
+            $('#instructionsTitle').val(g_selectedCircular.referenceNo).prop('readonly', true).show();
+            $('#instructionsTitleDisplay').hide();
         }
-        $('#instructionsDate').val(g_selectedCircular.issueDate ? g_selectedCircular.issueDate.split('T')[0] : '').prop('readonly', true);
+        $('#instructionsDate').val(g_selectedCircular.issueDate ? g_selectedCircular.issueDate.split('T')[0] : '').prop('readonly', true).show();
+        $('#instructionsDateDisplay').hide();
+        $('#instructionsDetailsDisplay').hide();
+        $('#instructionsDetails').show().prop('readonly', true);
         $('#instructionFields').show();
         $('#divisionSelect').show();
         $('#updateReferenceSection').show();
@@ -730,11 +756,13 @@ function updateObservationStatus() {
                                 <select id="referenceTypeSelect" class="form-select form-control">
                                     <option value="0">--Select Reference Type--</option>
                                 </select>
+                                <input id="referenceTypeDisplay" class="form-control" type="text" readonly style="display:none;" />
                             </div>
                             <div class="col-md-6">
                                 <select id="divisionSelect" class="form-select form-control" style="display:none;" disabled>
                                     <option value="0">--Select Division--</option>
                                 </select>
+                                <input id="divisionDisplay" class="form-control" type="text" readonly style="display:none;" />
                             </div>
                         </div>
                     </div>
@@ -745,16 +773,19 @@ function updateObservationStatus() {
                                 <select id="instructionsTitle" class="form-control" disabled>
                                     <option value="">--Select or Add Title/Chapter--</option>
                                 </select>
+                                <input id="instructionsTitleDisplay" class="form-control" type="text" readonly style="display:none;" />
                                 <input type="text" id="newInstructionsTitle" class="form-control mt-2" placeholder="Enter new title" style="display:none;" />
                                 <div id="instructionCount" class="text-info mt-1"></div>
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label>Instructions Date</label>
                                 <input id="instructionsDate" type="date" class="form-control" readonly />
+                                <input id="instructionsDateDisplay" class="form-control" type="text" readonly style="display:none;" />
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label>Instructions Details</label>
                                 <textarea id="instructionsDetails" class="form-control"></textarea>
+                                <textarea id="instructionsDetailsDisplay" class="form-control" readonly style="display:none;"></textarea>
                             </div>
                         </div>
                     </div>
