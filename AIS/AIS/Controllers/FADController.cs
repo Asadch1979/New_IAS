@@ -406,6 +406,37 @@ namespace AIS.Controllers
                 }
             }
 
+        public IActionResult ReferenceUpdateList()
+            {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            var loggedInUser = sessionHandler.GetSessionUser();
+            ViewData["EntitiesList"] = dBConnection.GetObservationEntitiesForManageObservations();
+            ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserEntityID);
+            ViewData["UserPPNO"] = loggedInUser.PPNumber;
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            else
+                {
+                if (!sessionHandler.HasPermissionToViewPage(MethodBase.GetCurrentMethod().Name))
+                    return RedirectToAction("Index", "PageNotFound");
+                else
+                    return View("~/Views/FAD/ReferenceUpdateList.cshtml");
+                }
+            }
+
+        public IActionResult ReferenceUpdateEdit(int comId)
+            {
+            var obs = dBConnection.GetObservationsForReferenceUpdate(null, null, null).FirstOrDefault(x => x.ComId == comId);
+            return View("~/Views/FAD/ReferenceUpdateEdit.cshtml", obs);
+            }
+
+        public IActionResult ReferenceUpdateLog(int comId)
+            {
+            var logs = dBConnection.GetUpdateLog(comId);
+            return View("~/Views/FAD/ReferenceUpdateLog.cshtml", logs);
+            }
+
         public IActionResult Error()
             {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
