@@ -52,6 +52,13 @@
 
         loadReferenceTypes();
 
+                    // load controlling offices if a relationship type is already selected
+            if ($('#RelationshipField').val() !== "0") {
+                getrelation();
+            }
+
+
+
         $('#referenceTypeSelect').on('change', function () {
             if ($(this).val() === "3") {
                 $('#circularModal').modal('show');
@@ -204,7 +211,7 @@
         
     }
 
-    }
+    
     function ObservationViewerPanel(index) {
         g_index = index;
         $('#viewMemoModel').modal('show');
@@ -224,12 +231,12 @@
         $('#auditPara_AmountInv').val(v.amounT_INV);
         $('#auditPara_InstNO').val(v.nO_INSTANCES);
         $('#referenceTypeSelect').val(v.referencE_TYPE || v.REFERENCE_TYPE);
-        $('#divisionSelect').val(v.division || v.DIVISION);
-        $('#instructionsTitle').val(v.instructionS_TITLE || v.INSTRUCTIONS_TITLE);
-        $('#instructionsDetails').val(v.instructionsDetails || v.INSTRUCTIONS_DETAILS);
-        $('#instructionsDate').val(v.instructionS_DATE || v.INSTRUCTIONS_DATE);
+        $('#divisionSelect').val(v.division);
+        $('#instructionsTitle').val(v.instructionS_TITLE);
+        $('#instructionsDetails').val(v.instructionsDetails);
+        $('#instructionsDate').val(v.instructionS_DATE);
 
-        var hasInst = v.instructionS_TITLE || v.INSTRUCTIONS_TITLE;
+        var hasInst = v.instructionS_TITLE;
         if (hasInst) {
             $('#instructionFields').show();
             $('#divisionSelect').show();
