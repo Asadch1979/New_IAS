@@ -34,7 +34,7 @@
 </table>
 
 <div class="modal fade" id="allocateModal" tabindex="-1" role="dialog" aria-labelledby="allocateModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Allocate Entities to <span id="selectedAuditorName"></span></h5>
@@ -85,7 +85,7 @@ function getrelation(parentEntityId=0,userEntityId=0){
     $.ajax({
         url: g_asiBaseURL + '/ApiCalls/getparentrelForParaPositionReport',
         type:'POST',
-        data:{ 'ENTITY_REALTION_ID': $('#RelationshipField option:selected').val() },
+        data:{ 'ENTITY_REALTION_ID': 3 },
         cache:false,
         success:function(data){
             $('#controlingsearch').append('<option id="0" value="0">--Select Controlling/Reporting Office--</option>');
