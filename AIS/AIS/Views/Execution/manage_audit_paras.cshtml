@@ -15,27 +15,10 @@
     var g_instructionMap = [];
     var g_annexureRefId = 0;
     var g_selectedInstruction = null;
-    var g_selectedCircular = null; // store selected circular from popup
+    // removed circular selection logic
     var g_annexList = @Html.Raw(Json.Serialize(ViewData["AnnexList"]));
     var g_selectedRiskId = 0;
 
-    function loadReferenceTypes(callback) {
-        $('#referenceTypeSelect').empty();
-        $('#referenceTypeSelect').append('<option value="0">--Select Reference Type--</option>');
-        $.ajax({
-            url: g_asiBaseURL + "/ApiCalls/GetReferenceTypes",
-            type: "GET",
-            cache: false,
-            success: function (data) {
-                if (data && data.length > 0) {
-                    $.each(data, function (i, v) {
-                        $('#referenceTypeSelect').append($('<option>', { value: v.id, text: v.name }));
-                    });
-                }
-                if (callback) callback();
-            }
-        });
-    }
     $(document).ready(function () {
         $('#entitySelectField').select2();
         $('#paraTextViewer').richText({
@@ -50,7 +33,6 @@
             $('#auditPara_Period').append('<option value="' + i + '">' + i + '</option>');
         }
 
-        loadReferenceTypes();
 
                     // load controlling offices if a relationship type is already selected
             if ($('#RelationshipField').val() !== "0") {
@@ -59,52 +41,9 @@
 
 
 
-        $('#referenceTypeSelect').on('change', function () {
-            if ($(this).val() === "3") {
-                $('#circularModal').modal('show');
-            } else {
-                g_selectedCircular = null;
-            }
-            if ($(this).val() !== "0") {
-                $('#instructionFields').show();
-                $('#divisionSelect').show();
-                loadDivisions();
-            } else {
-                $('#instructionFields').hide();
-                $('#divisionSelect').hide();
-                $('#instructionsTitle').empty();
-                $('#instructionsDate').val('');
-                $('#instructionsDetails').val('');
-                $('#divisionSelect').val('0');
-            }
-            // removed call to tryLoadInstructions
-        });
 
     });
 
-    function loadDivisions(callback) {
-        $('#divisionSelect').empty();
-        $.ajax({
-            url: g_asiBaseURL + "/ApiCalls/getparentrel",
-            type: "POST",
-            data: {
-                'ENTITY_REALTION_ID': 3
-            },
-            cache: false,
-            success: function (data) {
-                $('#divisionSelect').append('<option value="0">--Select Division--</option>');
-                $.each(data, function (i, v) {
-                    $('#divisionSelect').append('<option value="' + v.entitY_ID + '\">' + v.description + '</option>');
-                });
-                if (g_selectedCircular) {
-                    $('#divisionSelect').val(g_selectedCircular.entId);
-                }
-                // no instruction loading on division change
-                if (callback) callback();
-            },
-            dataType: "json",
-        });
-    }
     function getrelation(parentEntityId = 0, userEntityId = 0) {
           //  alert("getrelation called");
 
@@ -219,12 +158,9 @@
         g_ind = v.indicator;
         g_annexureRefId = parseInt(v.annexurE_REF_ID || v.ANNEXURE_REF_ID || 0);
 
-        loadReferenceTypes(function () {
-            $('#auditPara_reference').val(v.referencE_TYPE || v.REFERENCE_TYPE);
-        });
-        loadDivisions(function () {
-            $('#auditPara_division').val(v.division);
-        });
+        // set pre-saved reference information
+        $('#auditPara_reference').val(v.referencE_TYPE || v.REFERENCE_TYPE);
+        $('#auditPara_division').val(v.division);
 
         $('#auditPara_Period').val(v.audiT_PERIOD);
         $('#auditPara_ParaNO').val(v.parA_NO);
@@ -252,34 +188,6 @@
     });
 
 
-    $(document).on('click', '#btnAddCircular', function () {
-        var selected = getSelectedCircular('#circularResultsTable');
-        if (!selected) {
-            alert('Please select a circular');
-            return;
-        }
-        g_selectedCircular = selected;
-        $('#circularModal').modal('hide');
-        $('#referenceTypeSelect').val('3').prop('disabled', true);
-        $('#divisionSelect').val(g_selectedCircular.entId).prop('readonly', true);
-            if ($('#auditPara_instructionsTitle').is('select')) {
-            var ref = g_selectedCircular.referenceNo;
-                if ($('#auditPara_instructionsTitle option[value="' + ref + '"]').length === 0) {
-                    $('#auditPara_instructionsTitle').append($('<option>', { value: ref, text: ref }));
-            }
-                $('#auditPara_instructionsTitle').val(ref).prop('disabled', true);
-        } else {
-                $('#auditPara_instructionsTitle').val(g_selectedCircular.referenceNo).prop('readonly', true);
-        }
-        $('#instructionsDate').val(g_selectedCircular.issueDate ? g_selectedCircular.issueDate.split('T')[0] : '').prop('readonly', true);
-        $('#instructionFields').show();
-        $('#divisionSelect').show();
-        $('#updateReferenceSection').show();
-    });
-
-    $(document).on('click', '#btnUpdateReference', function () {
-        $('#circularModal').modal('show');
-    });
 function updateObservationStatus() {
         if (g_ind != "N") {
             if ($('#auditPara_Period').val() == "") {
@@ -618,42 +526,6 @@ function updateObservationStatus() {
 
 </div>
 
-<!-- Circular Selection Modal -->
-<div class="modal fade" id="circularModal" tabindex="-1" aria-labelledby="circularModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="circularModalLabel">Select Circular</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Please enter any keyword to search the circular</label>
-                    <input type="text" id="circularSearchText" class="form-control" />
-                    <button type="button" id="btnSearchCircular" class="btn btn-primary mt-2">Search</button>
-                </div>
-                <div class="table-responsive">
-                    <table id="circularResultsTable" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Select</th>
-                                <th>Circular Reference</th>
-                                <th>Date of Issuance</th>
-                                <th>Subject</th>
-                                <th>Division</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btnAddCircular" class="btn btn-success">Add</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="viewMemoModel" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xl" role="document">
@@ -703,25 +575,19 @@ function updateObservationStatus() {
                         <label>Reference Type</label>
                         <div class="row">
                             <div class="col-md-6">
-                                <select id="auditPara_reference" class="form-select form-control">
-                                    <option value="0">--Select Reference Type--</option>
-                                </select>
+                                <input id="auditPara_reference" class="form-control" readonly />
                             </div>
                             <div class="col-md-6">
-                                <select id="auditPara_division" class="form-select form-control" style="display:none;" disabled>
-                                    <option value="0">--Select Division--</option>
-                                </select>
+                                <input id="auditPara_division" class="form-control" readonly />
                             </div>
                         </div>
                     </div>
-                    <div id="instructionFields" class="form-group mt-3" style="display:none;">
+                    <div id="instructionFields" class="form-group mt-3">
                         <div class="row">
                             <div class="col-md-4 mt-2">
                                 <label for="auditPara_instructionsTitle">Title/Chapter</label>
-                                <select id="auditPara_instructionsTitle" class="form-control" disabled>
-                                    <option value="">--Select or Add Title/Chapter--</option>
-                                </select>
-                                                               
+                                <input id="auditPara_instructionsTitle" class="form-control" readonly />
+
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label>Instructions Date</label>
@@ -729,15 +595,11 @@ function updateObservationStatus() {
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label>Instructions Details</label>
-                                <textarea id="auditPara_instructionsDetails" class="form-control"></textarea>
+                                <textarea id="auditPara_instructionsDetails" class="form-control" readonly></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div id="updateReferenceSection" class="form-group mt-2" style="display:none;">
-                        <label class="me-2">Do you want to update the reference?</label>
-                        <button type="button" id="btnUpdateReference" class="btn btn-warning">Update</button>
-                    </div>
                     <div class="form-group">
                         <label for="auditPara_Gist" class="font-weight-bold">Gist of Para</label>
                         <textarea id="auditPara_Gist" class="form-control"></textarea>
