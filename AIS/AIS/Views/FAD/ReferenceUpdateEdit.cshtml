@@ -1,0 +1,39 @@
+@model AIS.Models.ObservationReferenceModel
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Update Reference</h5>
+            <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-2">
+                <label>Para Title</label>
+                <input class="form-control" value="@Model.ParaTitle" readonly />
+            </div>
+            <div class="mb-2">
+                <label>Assigned Auditor</label>
+                <input class="form-control" value="@Model.AssignedAuditor" readonly />
+            </div>
+            <div class="mb-2">
+                <label>Status</label>
+                <input class="form-control" value="@Model.Status" readonly />
+            </div>
+            <div class="mb-2">
+                <label>Reference ID</label>
+                <input id="editReferenceId" class="form-control" value="@Model.ReferenceId" />
+            </div>
+            <div class="mb-2">
+                <label>Reference Type</label>
+                <input id="editReferenceType" class="form-control" value="@Model.ReferenceType" />
+            </div>
+            <div class="mb-2">
+                <label>Remarks</label>
+                <textarea id="editRemarks" class="form-control">@Model.Remarks</textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="saveReferenceBtn" data-comid="@Model.ComId">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</div>

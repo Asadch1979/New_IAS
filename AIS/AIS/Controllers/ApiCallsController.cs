@@ -3315,6 +3315,27 @@ namespace AIS.Controllers
             return Json(new { remarks = remarks });
             }
 
+        [HttpGet]
+        public IActionResult GetObservationsForReferenceUpdate(int? entId, int? assignedAuditorId, int? referenceId)
+            {
+            var result = dBConnection.GetObservationsForReferenceUpdate(entId, assignedAuditorId, referenceId);
+            return Json(result);
+            }
+
+        [HttpPost]
+        public IActionResult UpdateParaReference(int comId, int newRef, int updatedBy)
+            {
+            var result = dBConnection.UpdateParaReference(comId, newRef, updatedBy);
+            return Json(new { remarks = result });
+            }
+
+        [HttpGet]
+        public IActionResult GetUpdateLog(int comId)
+            {
+            var result = dBConnection.GetUpdateLog(comId);
+            return Json(result);
+            }
+
         [HttpPost]
 
         public List<FadDeskOfficerRptModel> get_fad_desk_officer_rpt_by_date_range(string startDate, string endDate)

@@ -1,0 +1,65 @@
+@using AIS.Models
+@{
+    ViewData["Title"] = "Reference Updates";
+    Layout = "_Layout";
+    var entities = ViewData["EntitiesList"] as List<AuditeeEntitiesModel>;
+    var auditors = ViewData["AuditEmployees"] as List<AuditEmployeeModel>;
+}
+<h4 class="mt-3" style="display:block;color:#45c545;">Reference Updates</h4>
+<input type="hidden" id="currentUser" value="@ViewData["UserPPNO"]" />
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label>Entity/Branch</label>
+        <select id="entityDropdown" class="form-control">
+            <option value="">--All--</option>
+            @if (entities != null)
+            {
+                foreach (var e in entities)
+                {
+                    <option value="@e.ENTITY_ID">@e.NAME</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label>Assigned Auditor</label>
+        <select id="auditorDropdown" class="form-control">
+            <option value="">--All--</option>
+            @if (auditors != null)
+            {
+                foreach (var a in auditors)
+                {
+                    <option value="@a.PPNO">@a.EMPLOYEEFIRSTNAME @a.EMPLOYEELASTNAME</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label>Reference</label>
+        <input type="text" id="referenceDropdown" class="form-control" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary w-100" id="searchBtn">Search</button>
+    </div>
+</div>
+<table id="referenceUpdateTable" class="table table-bordered table-striped bg-white">
+    <thead class="table-success">
+        <tr>
+            <th>Para Title</th>
+            <th>Reference ID</th>
+            <th>Reference Type</th>
+            <th>Assigned Auditor</th>
+            <th>Status</th>
+            <th>Updated By</th>
+            <th>Updated On</th>
+            <th>Remarks</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog"></div>
+<div class="modal fade" id="logModal" tabindex="-1" role="dialog"></div>
+@section Scripts{
+    <script src="~/js/referenceUpdate.js"></script>
+}
