@@ -3299,6 +3299,23 @@ namespace AIS.Controllers
             }
 
         [HttpPost]
+        public List<AuditeeEntitiesModel> GetObservationEntitiesForManageObservations(int controllingId)
+            {
+            return dBConnection.GetObservationEntitiesForManageObservations();
+            }
+
+        [HttpPost]
+        public IActionResult AllocateEntitiesToAuditor(int auditorPPNO, [FromForm] List<int> entityIds)
+            {
+            var remarks = "";
+            foreach (var entId in entityIds)
+                {
+                remarks = dBConnection.AllocateEntityToAuditor(entId, auditorPPNO, sessionHandler.GetSessionUser().PPNumber);
+                }
+            return Json(new { remarks = remarks });
+            }
+
+        [HttpPost]
 
         public List<FadDeskOfficerRptModel> get_fad_desk_officer_rpt_by_date_range(string startDate, string endDate)
             {
