@@ -388,6 +388,24 @@ namespace AIS.Controllers
                 }
             }
 
+        public IActionResult AllocateTask()
+            {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            var loggedInUser = sessionHandler.GetSessionUser();
+            ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserEntityID);
+            ViewData["EntitiesList"] = dBConnection.GetObservationEntitiesForManageObservations();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            else
+                {
+                if (!sessionHandler.HasPermissionToViewPage(MethodBase.GetCurrentMethod().Name))
+                    return RedirectToAction("Index", "PageNotFound");
+                else
+                    return View("~/Views/FAD/AllocateTask.cshtml");
+                }
+            }
+
         public IActionResult Error()
             {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
