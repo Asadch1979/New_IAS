@@ -3310,7 +3310,7 @@ namespace AIS.Controllers
             var remarks = "";
             foreach (var entId in entityIds)
                 {
-                remarks = dBConnection.AllocateEntityToAuditor(entId, auditorPPNO, sessionHandler.GetSessionUser().PPNumber);
+                remarks = dBConnection.AllocateEntityToAuditor(entId, auditorPPNO);
                 }
             return Json(new { remarks = remarks });
             }

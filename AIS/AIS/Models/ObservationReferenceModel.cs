@@ -13,7 +13,8 @@ namespace AIS.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public string Remarks { get; set; }
-    }
+        public int AssignedAuditorId { get; set; }
+        }
 
     public class ObservationReferenceLogModel
     {
